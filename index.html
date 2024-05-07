@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes Creater</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1> <img src="images/notes.png"> Notes</h1>
+        <button class="btn"> <img src="images/edit.png">Create Notes</button>
+        <div class="notes-container"> 
+            <!-- <p class="input-box" contenteditable="true">
+                <img src="images/delete.png">
+            </p> -->
+        </div>
+    </div>
+    <script>
+        let notesContainer = document.querySelector(".notes-container");
+        let createBtn = document.querySelector(".btn");
+        let notes = document.querySelectorAll(".input-box");
+
+        //for save the data when we refresh
+        function updateStorage(){
+            localStorage.setItem("notes", notesContainer.innerHTML);
+        }
+        createBtn.addEventListener("click", ()=> {
+            //for creating input box 
+            let inputBox = document.createElement("p");
+            let img = document.createElement("img");
+            inputBox.className = "input-box";
+            inputBox.setAttribute("contenteditable","true");
+            img.src = "images/delete.png";
+            notesContainer.appendChild(inputBox).appendChild(img);
+        })
+
+        // for when we click delete btn input box is deseable
+        notesContainer.addEventListener("click",function(e){
+            if(e.target.tagName === "IMG"){
+                e.target.parentElement.remove();
+                 updateStorage();
+            }
+             else if(e.target.tagName === "P"){
+                 notes = document.querySelectorAll(".input-box");
+                 notes.forEach(nt => {
+                     nt.onkeyup = function(){
+                         updateStorage();
+                     }
+                 })
+             }
+         })
+
+         //get all data when we refresh
+        function showNotes(){
+            notesContainer.innerHTML = localStorage.getItem("notes");
+        }
+        showNotes();
+
+        // for enter key, when we press enter key then cursor on next line 
+        document.addEventListener("keydown", event => {
+            if(event.key ==="Enter"){
+                document.execCommand("insertLineBreak");
+                event.preventDefault();
+            }
+        })
+     </script>
+</body>
+</html>
